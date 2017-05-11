@@ -1,3 +1,6 @@
+import virtualworld.AreaType;
+import virtualworld.GameInitializer;
+
 import javax.swing.*;
 import java.awt.event.*;
 
@@ -5,8 +8,14 @@ public class NewGameDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
+    private JTextField widthField;
+    private JTextField heightField;
+    private JRadioButton squareRadioButton;
+    private JRadioButton hexRadioButton;
+    private VirtualWorld mainWindow;
 
-    public NewGameDialog() {
+    public NewGameDialog(VirtualWorld mainWindow) {
+        this.mainWindow = mainWindow;
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -43,8 +52,26 @@ public class NewGameDialog extends JDialog {
 
     private void onOK() {
         // add your code here
+        int width, height;
+        try {
+            width = Integer.parseInt(widthField.getText());
+            height = Integer.parseInt(heightField.getText());
+        }catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Conajmniej jedna podana liczba jest bledna", "Blad", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        AreaType areaType;
+        if(squareRadioButton.isSelected())areaType=AreaType.SQUARE;
+        else if(hexRadioButton.isSelected())areaType= AreaType.HEX;
+        else {
+            JOptionPane.showMessageDialog(null, "Nie wybrano rodzaju pol planszy", "Blad", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         dispose();
+        mainWindow.StartNewGame(new GameInitializer(width, height, areaType));
     }
+
+
 
     private void onCancel() {
         // add your code here if necessary

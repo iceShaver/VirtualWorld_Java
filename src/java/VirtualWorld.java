@@ -1,4 +1,6 @@
 import oracle.jrockit.jfr.JFR;
+import virtualworld.GameInitializer;
+import virtualworld.World;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +20,7 @@ public class VirtualWorld extends JFrame {
     private JButton logWindowButton;
     private JButton intructionButton;
     private LogWindow logFrame;
+    private World world;
     public VirtualWorld(){
         super("Wirtualny świat - Kamil Królikowski 165253");
         SwingUtilities.invokeLater(new Runnable() {
@@ -54,8 +57,7 @@ public class VirtualWorld extends JFrame {
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JDialog newGameDialog = new NewGameDialog();
-
+                new NewGameDialog(VirtualWorld.this);
             }
         });
         openGameButton.addActionListener(new ActionListener() {
@@ -66,4 +68,12 @@ public class VirtualWorld extends JFrame {
         });
     }
 
+    public void StartNewGame(GameInitializer gameInitializer){
+        world = new World(gameInitializer);
+        drawIterface();
+    }
+
+    private void drawIterface() {
+
+    }
 }
