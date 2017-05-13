@@ -3,15 +3,18 @@ package virtualworld.organisms.animals;
 import virtualworld.Position;
 import virtualworld.World;
 
+import javax.swing.*;
 import java.awt.*;
+import java.lang.invoke.MethodHandles;
 
 /**
  * Created by Kamil on 11.05.2017.
  */
 public class CyberSheep  extends Animal{
-    public CyberSheep(int strength, Position position, int age, World world, int initiative, Color color) {
-        super(strength, position, age, world, initiative, color);
+    public CyberSheep(int strength, int age, int initiative, Position position, World world) {
+        super(strength, age, initiative, position, world);
     }
-
-
+    static {
+        readImage(MethodHandles.lookup().lookupClass().getSimpleName());
+    }
 }

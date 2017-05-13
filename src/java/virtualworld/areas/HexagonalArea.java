@@ -10,8 +10,8 @@ import javax.swing.*;
  */
 public class HexagonalArea extends Area {
 
-    public HexagonalArea(int width, int height) {
-        super(width, height);
+    public HexagonalArea(int width, int height, JPanel worldRepresentationPanel) {
+        super(width, height, worldRepresentationPanel);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class HexagonalArea extends Area {
     }
 
     @Override
-    public void DrawFields(JPanel worldRepresentationPanel) {
+    public void DrawFields() {
 
     }
 

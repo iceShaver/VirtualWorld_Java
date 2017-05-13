@@ -27,6 +27,11 @@ public class Position {
         this.y = y;
     }
 
+    @Override
+    public String toString() {
+        return "("+x+","+y+")";
+    }
+
     private int x;
     private int y;
 }

@@ -14,16 +14,15 @@ import java.util.Random;
 public class SquareArea extends Area {
 
     private Field[][] fields;
-
-    public SquareArea(int width, int height) {
-        super(width, height);
+    public SquareArea(int width, int height, JPanel worldRepresentationPanel) {
+        super(width, height, worldRepresentationPanel);
         fields = new Field[height][width];
     }
 
     @Override
     public Position GetRandomPosition() {
         Random generator = new Random();
-        return new Position(generator.nextInt(dimension.getWidth()), generator.nextInt(dimension.getHeight()));
+        return new Position(generator.nextInt(width), generator.nextInt(height));
     }
 
     @Override
@@ -32,8 +31,8 @@ public class SquareArea extends Area {
         Position bottomRightPosition = new Position(position.getX()+range, position.getY()+range);
         if(topLeftPosition.getX()<0)topLeftPosition.setX(0);
         if(topLeftPosition.getY()<0)topLeftPosition.setY(0);
-        if(bottomRightPosition.getX()>=dimension.getWidth()) bottomRightPosition.setX(dimension.getWidth()-1);
-        if(bottomRightPosition.getY()>=dimension.getHeight()) bottomRightPosition.setY(dimension.getHeight()-1);
+        if(bottomRightPosition.getX()>=height) bottomRightPosition.setX(width-1);
+        if(bottomRightPosition.getY()>=height) bottomRightPosition.setY(height-1);
         int availablePositionsWidth = bottomRightPosition.getX()-topLeftPosition.getX();
         int availablePositionsHeight = bottomRightPosition.getY()-topLeftPosition.getY();
         int availablePositionsNumber = availablePositionsHeight*availablePositionsWidth-1;
@@ -46,10 +45,10 @@ public class SquareArea extends Area {
     public Position GetEmptyRandomPosition() {
         Random generator = new Random();
         Position result = new Position();
-        int counter = dimension.getHeight()*dimension.getWidth()*2;
+        int counter = height*width*2;
         while(counter--!=0){
-            result.setX(generator.nextInt(dimension.getWidth()));
-            result.setY(generator.nextInt(dimension.getHeight()));
+            result.setX(generator.nextInt(width));
+            result.setY(generator.nextInt(height));
             if(GetOrganism(result)==null) return result;
         }
 
@@ -79,7 +78,7 @@ public class SquareArea extends Area {
     }
 
     @Override
-    public void DrawFields(JPanel worldRepresentationPanel) {
+    public void DrawFields() {
         worldRepresentationPanel.setLayout(new GridLayout(width, height));
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -99,7 +98,11 @@ public class SquareArea extends Area {
     @Override
     public void pushOrganism(Organism organism) {
         fields[organism.getPosition().getY()][organism.getPosition().getX()].setOrganism(organism);
-        fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().setBackground(organism.getColor());
+        if(organism.getImageIcon()==null)
+            fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().setBackground(Color.black);
+        else
+            fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().setIcon(new ImageIcon(organism.getImageIcon().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+        fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().setOpaque(true);
         fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().addActionListener(organism);
     }
 }

@@ -67,6 +67,12 @@
               <text value="Log Window"/>
             </properties>
           </component>
+          <component id="543be" class="javax.swing.JButton" binding="organismsListButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="Organisms List"/>
+            </properties>
+          </component>
           <component id="345b" class="javax.swing.JButton" binding="intructionButton" default-binding="true">
             <constraints/>
             <properties>

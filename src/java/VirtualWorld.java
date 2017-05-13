@@ -19,7 +19,9 @@ public class VirtualWorld extends JFrame {
     private JPanel worldRepresentationPanel;
     private JButton logWindowButton;
     private JButton intructionButton;
+    private JButton organismsListButton;
     private LogWindow logFrame;
+    private AllOrganismsListWindow allOrganismsListWindow;
     private World world;
     public VirtualWorld(){
         super("Wirtualny świat - Kamil Królikowski 165253");
@@ -60,6 +62,7 @@ public class VirtualWorld extends JFrame {
                 NewGameDialog newGameDialog = new NewGameDialog();
                 GameInitializer gameInitializer = newGameDialog.GetResult();
                 if(gameInitializer==null)return;
+                gameInitializer.worldRepresentationPanel = worldRepresentationPanel;
                 StartNewGame(gameInitializer);
             }
         });
@@ -70,6 +73,12 @@ public class VirtualWorld extends JFrame {
             }
         });
 
+        organismsListButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                allOrganismsListWindow = new AllOrganismsListWindow(world.getOrderedOrganisms());
+            }
+        });
     }
 
     public void StartNewGame(GameInitializer gameInitializer){

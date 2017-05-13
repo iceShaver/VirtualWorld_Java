@@ -2,37 +2,42 @@ package virtualworld.organisms;
 
 import virtualworld.Position;
 import virtualworld.World;
+import virtualworld.organisms.animals.Animal;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 /**
  * Created by Kamil on 11.05.2017.
  */
 public abstract class Organism implements Comparable, ActionListener {
-    public Organism(int strength, Position position, int age, World world, int initiative, Color color) {
+    public Organism(int strength, int age, int initiative, Position position, World world) {
         this.strength = strength;
-        this.position = position;
         this.age = age;
-        this.world = world;
         this.initiative = initiative;
-        this.color = color;
+        this.position = position;
+        this.world = world;
     }
 
     public abstract void Act();
 
     @Override
     public int compareTo(Object o) {
-        if(initiative>((Organism)o).initiative)
+        if (initiative > ((Organism) o).initiative)
             return 1;
-        if(initiative<((Organism)o).initiative)
+        if (initiative < ((Organism) o).initiative)
             return -1;
-        if(initiative==((Organism)o).initiative){
-            if(age>((Organism)o).age)
+        if (initiative == ((Organism) o).initiative) {
+            if (age > ((Organism) o).age)
                 return 1;
-            if(age<((Organism)o).age)
+            if (age < ((Organism) o).age)
                 return -1;
             return 0;
         }
@@ -43,17 +48,16 @@ public abstract class Organism implements Comparable, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getName());
+        sb.append(getClass().getSimpleName());
         sb.append(System.lineSeparator());
-        sb.append("Sila: "+strength);
+        sb.append("Sila: " + strength);
         sb.append(System.lineSeparator());
-        sb.append("Pozycja: "+position.toString());
+        sb.append("Wiek: " + age);
         sb.append(System.lineSeparator());
-        sb.append("Wiek: "+age);
+        sb.append("Inicjatywa: " + initiative);
         sb.append(System.lineSeparator());
-        sb.append("Inicjatywa: "+initiative);
+        sb.append("Pozycja: " + position.toString());
         sb.append(System.lineSeparator());
-        sb.append("Color"+color);
         JOptionPane.showMessageDialog(null, sb, "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -97,17 +101,28 @@ public abstract class Organism implements Comparable, ActionListener {
         this.initiative = initiative;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public static Image getImageIcon() {
+        return imageIcon;
     }
 
     protected int strength;
-    protected Position position;
     protected int age;
-    protected World world;
     private int initiative;
-    private Color color;
-    public Color getColor() {
-        return color;
+    protected Position position;
+    protected World world;
+    protected static Image imageIcon;
+
+    static protected void readImage(String className) {
+        try {
+            imageIcon = ImageIO.read(new File("./img/"+className+".png"));
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Nie znaleziono pliku tekstury dla: " + className, "Blad", JOptionPane.ERROR_MESSAGE);
+            //Graphics graphics = new BufferedImage(0,40,BufferedImage.TYPE_INT_ARGB).getGraphics();
+            //graphics.drawString(className.substring(0,2), 1, 1);
+            //graphics.drawImage(imageIcon, 0, 0, null);
+            //imageIcon = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
+        }
+
     }
+
 }
