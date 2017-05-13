@@ -4,6 +4,8 @@ import virtualworld.Dimension;
 import virtualworld.Position;
 import virtualworld.organisms.Organism;
 
+import javax.swing.*;
+
 /**
  * Created by Kamil on 11.05.2017.
  */
@@ -36,9 +38,7 @@ public abstract class Area {
     public abstract Position GetRandomPosition(Position position, int range);
     public abstract Position GetEmptyRandomPosition();
     public abstract Position GetEmptyRandomPosition(Position position, int range);
-    public Organism GetOrganism(Position position){
-        return organisms[position.getX()][position.getY()];
-    }
+    public abstract Organism GetOrganism(Position position);
     public Dimension getDimension() {
         return dimension;
     }
@@ -48,5 +48,9 @@ public abstract class Area {
     }
 
     protected Dimension dimension;
-    protected Organism[][] organisms;
+
+
+    public abstract void DrawFields(JPanel worldRepresentationPanel);
+
+    public abstract void pushOrganism(Organism organism);
 }

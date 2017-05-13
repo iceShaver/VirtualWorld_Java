@@ -1,7 +1,17 @@
 package virtualworld.organisms.animals;
 
+import virtualworld.Position;
+import virtualworld.World;
+
+import java.awt.*;
+
 /**
  * Created by Kamil on 11.05.2017.
  */
-public class Human {
+public class Human extends Animal{
+    public Human(int strength, Position position, int age, World world, int initiative, Color color) {
+        super(strength, position, age, world, initiative, color);
+    }
+
+
 }

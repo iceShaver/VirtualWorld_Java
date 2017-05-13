@@ -1,8 +1,11 @@
 package virtualworld.areas;
 
+import virtualworld.Field;
 import virtualworld.Position;
 import virtualworld.organisms.Organism;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -10,9 +13,11 @@ import java.util.Random;
  */
 public class SquareArea extends Area {
 
+    private Field[][] fields;
 
     public SquareArea(int width, int height) {
         super(width, height);
+        fields = new Field[height][width];
     }
 
     @Override
@@ -50,10 +55,10 @@ public class SquareArea extends Area {
 
         //Iterate in order and find any place in array
         int x = 0;
-        for (Organism[] organisms : organisms) {
+        for (Field[] fields : fields) {
             int y = 0;
-            for (Organism organism : organisms) {
-                if(organism==null) return new Position(x,y);
+            for (Field field : fields) {
+                if(field.getOrganism()==null) return new Position(x,y);
                     y++;
             }
             x++;
@@ -71,5 +76,30 @@ public class SquareArea extends Area {
         }
 
         return null;
+    }
+
+    @Override
+    public void DrawFields(JPanel worldRepresentationPanel) {
+        worldRepresentationPanel.setLayout(new GridLayout(width, height));
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                fields[i][j] = new Field(null, new JButton());
+                fields[i][j].getButton().setContentAreaFilled(false);
+                worldRepresentationPanel.add(fields[i][j].getButton());
+            }
+        }
+        worldRepresentationPanel.revalidate();
+    }
+
+    @Override
+    public Organism GetOrganism(Position position) {
+        return fields[position.getY()][position.getX()].getOrganism();
+    }
+
+    @Override
+    public void pushOrganism(Organism organism) {
+        fields[organism.getPosition().getY()][organism.getPosition().getX()].setOrganism(organism);
+        fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().setBackground(organism.getColor());
+        fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().addActionListener(organism);
     }
 }

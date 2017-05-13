@@ -1,6 +1,9 @@
 package virtualworld.areas;
 
 import virtualworld.Position;
+import virtualworld.organisms.Organism;
+
+import javax.swing.*;
 
 /**
  * Created by Kamil on 11.05.2017.
@@ -31,4 +34,18 @@ public class HexagonalArea extends Area {
         return null;
     }
 
+    @Override
+    public void DrawFields(JPanel worldRepresentationPanel) {
+
+    }
+
+    @Override
+    public Organism GetOrganism(Position position) {
+        return null;
+    }
+
+    @Override
+    public void pushOrganism(Organism organism) {
+
+    }
 }

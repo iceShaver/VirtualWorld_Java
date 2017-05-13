@@ -1,11 +1,11 @@
-import oracle.jrockit.jfr.JFR;
 import virtualworld.GameInitializer;
 import virtualworld.World;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by Kamil on 01.05.2017.
@@ -57,7 +57,10 @@ public class VirtualWorld extends JFrame {
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new NewGameDialog(VirtualWorld.this);
+                NewGameDialog newGameDialog = new NewGameDialog();
+                GameInitializer gameInitializer = newGameDialog.GetResult();
+                if(gameInitializer==null)return;
+                StartNewGame(gameInitializer);
             }
         });
         openGameButton.addActionListener(new ActionListener() {
@@ -66,14 +69,13 @@ public class VirtualWorld extends JFrame {
 
             }
         });
+
     }
 
     public void StartNewGame(GameInitializer gameInitializer){
         world = new World(gameInitializer);
-        drawIterface();
+        world.DrawInterface(worldRepresentationPanel);
+        world.RandomizeOrganisms();
     }
 
-    private void drawIterface() {
-
-    }
 }

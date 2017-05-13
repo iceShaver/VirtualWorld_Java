@@ -12,10 +12,8 @@ public class NewGameDialog extends JDialog {
     private JTextField heightField;
     private JRadioButton squareRadioButton;
     private JRadioButton hexRadioButton;
-    private VirtualWorld mainWindow;
-
-    public NewGameDialog(VirtualWorld mainWindow) {
-        this.mainWindow = mainWindow;
+    private GameInitializer gameInitializer;
+    public NewGameDialog() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -68,7 +66,7 @@ public class NewGameDialog extends JDialog {
             return;
         }
         dispose();
-        mainWindow.StartNewGame(new GameInitializer(width, height, areaType));
+        gameInitializer = new GameInitializer(width, height, areaType);
     }
 
 
@@ -78,4 +76,7 @@ public class NewGameDialog extends JDialog {
         dispose();
     }
 
+    public GameInitializer GetResult(){
+        return gameInitializer;
+    }
 }
