@@ -2,6 +2,7 @@ package virtualworld.organisms.animals;
 
 import virtualworld.Position;
 import virtualworld.World;
+import virtualworld.areas.NeighbourPlaceSearchMode;
 import virtualworld.organisms.Organism;
 
 import javax.imageio.ImageIO;
@@ -20,7 +21,7 @@ public abstract class Animal extends Organism {
 
     @Override
     public void Act() {
-        Position newPosition = world.GetRandomPosition(position, 1);
+        Position newPosition = world.GetRandomPosition(position, 1, NeighbourPlaceSearchMode.all);
         if (newPosition == null) return;
         if (world.GetOrganism(newPosition) != null) {
             world.Collide(this, world.GetOrganism(newPosition));

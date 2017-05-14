@@ -19,10 +19,7 @@ public class HexagonalArea extends Area {
         return null;
     }
 
-    @Override
-    public Position GetRandomPosition(Position position, int range) {
-        return null;
-    }
+
 
     @Override
     public Position GetEmptyRandomPosition() {
@@ -52,5 +49,10 @@ public class HexagonalArea extends Area {
     @Override
     public void deleteOrganism(Position position) {
 
+    }
+
+    @Override
+    public Position GetRandomPosition(Position position, int range, NeighbourPlaceSearchMode neighbourPlaceSearchMode) {
+        return null;
     }
 }

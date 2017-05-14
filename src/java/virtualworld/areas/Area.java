@@ -37,10 +37,10 @@ public abstract class Area {
     }
 
     public abstract Position GetRandomPosition();
-    public abstract Position GetRandomPosition(Position position, int range);
     public abstract Position GetEmptyRandomPosition();
     public abstract Position GetEmptyRandomPosition(Position position, int range);
     public abstract Organism GetOrganism(Position position);
+    public abstract Position GetRandomPosition(Position position, int range, NeighbourPlaceSearchMode neighbourPlaceSearchMode);
 
 
 

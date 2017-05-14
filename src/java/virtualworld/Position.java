@@ -3,7 +3,7 @@ package virtualworld;
 /**
  * Created by Kamil on 11.05.2017.
  */
-public class Position {
+public class Position implements Cloneable{
     public Position() {}
 
     public Position(int x, int y) {
@@ -34,4 +34,9 @@ public class Position {
 
     private int x;
     private int y;
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

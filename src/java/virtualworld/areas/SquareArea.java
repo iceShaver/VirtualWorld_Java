@@ -1,5 +1,6 @@
 package virtualworld.areas;
 
+import com.sun.javafx.font.directwrite.RECT;
 import virtualworld.Field;
 import virtualworld.Position;
 import virtualworld.organisms.Organism;
@@ -7,6 +8,11 @@ import virtualworld.organisms.Organism;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
+import java.util.Vector;
+
+import static virtualworld.areas.NeighbourPlaceSearchMode.all;
+import static virtualworld.areas.NeighbourPlaceSearchMode.emptyOrWithWeakOrganism;
+import static virtualworld.areas.NeighbourPlaceSearchMode.onlyEmpty;
 
 /**
  * Created by Kamil on 11.05.2017.
@@ -26,8 +32,8 @@ public class SquareArea extends Area {
     }
 
     @Override
-    public Position GetRandomPosition(Position position, int range) {
-        Position topLeftPosition = new Position(position.getX()-range, position.getY()-range);
+    public Position GetRandomPosition(Position position, int range, NeighbourPlaceSearchMode neighbourPlaceSearchMode) {
+        /*Position topLeftPosition = new Position(position.getX()-range, position.getY()-range);
         Position bottomRightPosition = new Position(position.getX()+range, position.getY()+range);
         if(topLeftPosition.getX()<0)topLeftPosition.setX(0);
         if(topLeftPosition.getY()<0)topLeftPosition.setY(0);
@@ -37,14 +43,108 @@ public class SquareArea extends Area {
         int availablePositionsHeight = bottomRightPosition.getY()-topLeftPosition.getY()+1;
         int availablePositionsNumber = availablePositionsHeight*availablePositionsWidth-1;
         if(availablePositionsNumber==0) return null;
-        int random = new Random().nextInt(availablePositionsNumber);
+        //int random = new Random().nextInt(availablePositionsNumber);
         int randomX=0, randomY=0;
         do {
             randomX = new Random().nextInt(availablePositionsWidth);
             randomY = new Random().nextInt(availablePositionsHeight);
-        }while (randomX ==position.getX() && randomY==position.getY());
+        }while (topLeftPosition.getX()+randomX ==position.getX() && topLeftPosition.getY()+randomY==position.getY());
 
-        return new Position(topLeftPosition.getX()+randomX, topLeftPosition.getY()+randomY);
+        return new Position(topLeftPosition.getX()+randomX, topLeftPosition.getY()+randomY);*/
+        Vector<Position> availablePositions = getAllNeighbourPositions(position, range, neighbourPlaceSearchMode);
+        if(availablePositions.size()==0)return null;
+        if(availablePositions.size()==1)return availablePositions.firstElement();
+        int random = new Random().nextInt(availablePositions.size());
+        return availablePositions.get(random);
+    }
+
+
+    public Vector<Position> getAllNeighbourPositions(Position position, int range, NeighbourPlaceSearchMode neighbourPlaceSearchMode)
+    {
+
+        RECT rect = new RECT();
+        rect.left = position.getX() - range;
+        rect.right = position.getX() + range;
+        rect.top = position.getY() - range;
+        rect.bottom = position.getY() + range;
+
+        //Assert wanted rect is inside organism area
+        while (rect.left < 0) rect.left++;
+        while (rect.top < 0) rect.top++;
+        while (rect.right > width - 1) rect.right--;
+        while (rect.bottom > height - 1)rect.bottom--;
+
+        Position tmpPos = new Position(rect.left, rect.top);
+        Vector<Position> whereCanMove = new Vector<>();
+
+        //Search rect for empty places
+        for (;;)
+        {
+            if (neighbourPlaceSearchMode == onlyEmpty) {
+                if (GetOrganism(tmpPos) == null)
+                {
+                    whereCanMove.add(new Position(tmpPos.getX(), tmpPos.getY()));
+                }
+                if (tmpPos.getX() >= rect.right)
+                {
+                    if (tmpPos.getY() >= rect.bottom)
+                    {
+                        if (GetOrganism(tmpPos) == null)
+                            whereCanMove.add(new Position(tmpPos.getX(), tmpPos.getY()));
+                        break;
+                    }
+                    tmpPos.setY(tmpPos.getY()+1);
+                    tmpPos.setX(rect.left) ;
+                }
+                else
+                tmpPos.setX(tmpPos.getX()+1);
+            }
+            else if (neighbourPlaceSearchMode == all)
+            {
+                if (!(tmpPos.getX() == position.getX() && tmpPos.getY() == position.getY()) && !(tmpPos == position))
+                    whereCanMove.add(new Position(tmpPos.getX(), tmpPos.getY()));
+                if (tmpPos.getX() >= rect.right)
+                {
+                    if (tmpPos.getY() >= rect.bottom)
+                    {
+                        if (!(tmpPos.getX() == position.getX() && tmpPos.getY() == position.getY()) && !(tmpPos == position))
+                            whereCanMove.add(new Position(tmpPos.getX(), tmpPos.getY()));
+                        break;
+                    }
+                    tmpPos.setY(tmpPos.getY()+1);
+
+                    tmpPos.setX(rect.left);
+                }
+                else
+                tmpPos.setX(tmpPos.getX()+1);
+            }
+            else if (neighbourPlaceSearchMode == emptyOrWithWeakOrganism)
+            {
+                if (GetOrganism(tmpPos) == null)
+                    whereCanMove.add(new Position(tmpPos.getX(), tmpPos.getY()));
+                else if (GetOrganism(position).getStrength() >= GetOrganism(tmpPos).getStrength() && !(tmpPos == position))
+                whereCanMove.add(new Position(tmpPos.getX(), tmpPos.getY()));
+                if (tmpPos.getX() >= rect.right)
+                {
+                    if (tmpPos.getY() >= rect.bottom)
+                    {
+                        if (GetOrganism(tmpPos) == null)
+                            whereCanMove.add(new Position(tmpPos.getX(), tmpPos.getY()));
+                        else if (GetOrganism(position).getStrength() >= GetOrganism(tmpPos).getStrength() && !(tmpPos == position))
+                        whereCanMove.add(new Position(tmpPos.getX(), tmpPos.getY()));
+                        break;
+                    }
+                    tmpPos.setY(tmpPos.getY()+1);
+                    tmpPos.setX(rect.left);
+                }
+                else
+                tmpPos.setX(tmpPos.getX()+1);
+
+
+
+            }
+        }
+        return whereCanMove;
     }
 
     @Override
@@ -77,9 +177,8 @@ public class SquareArea extends Area {
         int counter = (2*range+1)*2;
         while(counter--!=0){
             result = GetRandomPosition();
-            if(position==null)return result;
+            if(GetOrganism(result)==null)return result;
         }
-
         return null;
     }
 
