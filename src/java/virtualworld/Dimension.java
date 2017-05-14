@@ -1,9 +1,11 @@
 package virtualworld;
 
+import java.io.Serializable;
+
 /**
  * Created by Kamil on 11.05.2017.
  */
-public class Dimension {
+public class Dimension implements Serializable{
     public Dimension() {
     }
 

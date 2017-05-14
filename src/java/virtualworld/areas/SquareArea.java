@@ -7,6 +7,7 @@ import virtualworld.organisms.Organism;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 import java.util.Vector;
 
@@ -17,7 +18,7 @@ import static virtualworld.areas.NeighbourPlaceSearchMode.onlyEmpty;
 /**
  * Created by Kamil on 11.05.2017.
  */
-public class SquareArea extends Area {
+public class SquareArea extends Area  implements Serializable {
 
     private Field[][] fields;
     public SquareArea(int width, int height, JPanel worldRepresentationPanel) {
@@ -187,9 +188,12 @@ public class SquareArea extends Area {
         worldRepresentationPanel.setLayout(new GridLayout(width, height));
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                fields[i][j] = new Field(null, new JButton());
-                fields[i][j].getButton().setContentAreaFilled(false);
+                if(fields[i][j]==null) {
+                    fields[i][j] = new Field(null, new JButton());
+                    fields[i][j].getButton().setContentAreaFilled(false);
+                }
                 worldRepresentationPanel.add(fields[i][j].getButton());
+                worldRepresentationPanel.repaint();
             }
         }
         worldRepresentationPanel.revalidate();

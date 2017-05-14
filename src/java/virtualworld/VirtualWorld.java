@@ -4,9 +4,11 @@ import virtualworld.organisms.Organism;
 import virtualworld.organisms.animals.Antelope;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
 /**
  * Created by Kamil on 01.05.2017.
@@ -28,6 +30,7 @@ public class VirtualWorld extends JFrame {
     private AllOrganismsListWindow allOrganismsListWindow;
     private World world;
     private Reporter reporter;
+    boolean gameStarted;
 
     public VirtualWorld() {
         super("Wirtualny świat - Kamil Królikowski 165253");
@@ -38,6 +41,7 @@ public class VirtualWorld extends JFrame {
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 pack();
                 setVisible(true);
+                gameStarted = false;
             }
         });
 
@@ -79,12 +83,7 @@ public class VirtualWorld extends JFrame {
                 StartNewGame(gameInitializer);
             }
         });
-        openGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-            }
-        });
 
         organismsListButton.addActionListener(new ActionListener() {
             @Override
@@ -101,6 +100,91 @@ public class VirtualWorld extends JFrame {
                 world.PushOrganism(new Antelope(0,0,0,new Position(5,5), world));
             }
         });
+        saveGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveGame();
+            }
+        });
+        openGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "Binary files", "bin");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(getParent());
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    System.out.println("You chose to open this file: " +
+                            chooser.getSelectedFile().getName());
+                    openGame(chooser.getSelectedFile().getAbsolutePath());
+                }
+
+            }
+        });
+    }
+
+    private void openGame(String absolutePath) {
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+        try{
+            fis = new FileInputStream(absolutePath);
+            ois = new ObjectInputStream(fis);
+            world = (World) ois.readObject();
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }finally {
+            try{
+            if(ois!=null)
+                ois.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            try{
+                if(fis!=null)fis.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        GameInitializer gameInitializer = new GameInitializer();
+        gameInitializer.mainWindow=this;
+        gameInitializer.worldRepresentationPanel = worldRepresentationPanel;
+        world.initializeAfterDeserialization(gameInitializer);
+        world.DrawInterface(worldRepresentationPanel);
+    }
+
+    private void saveGame() {
+        if(world==null)
+        {
+            JOptionPane.showMessageDialog(null, "Start the game first", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
+        try{
+            fos = new FileOutputStream("test.bin");
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(world);
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            try {
+                if (oos != null) oos.close();
+            } catch (IOException w) {
+            }
+            try{
+                if (fos!=null)
+                    fos.close();
+            }catch (IOException e){
+
+            }
+        }
     }
 
     public void StartNewGame(GameInitializer gameInitializer) {

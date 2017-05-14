@@ -1,18 +1,21 @@
 package virtualworld.organisms.plants;
 
 import virtualworld.Position;
+import virtualworld.ResistType;
 import virtualworld.World;
 import virtualworld.areas.NeighbourPlaceSearchMode;
+import virtualworld.organisms.Organism;
 import virtualworld.organisms.animals.Animal;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Created by Kamil on 11.05.2017.
  */
-public abstract class Plant extends Animal {
+public abstract class Plant extends Organism implements Serializable {
     protected static Image imageIcon;
 
     public Plant(int strength, int age, int initiative, Position position, World world) {
@@ -21,7 +24,7 @@ public abstract class Plant extends Animal {
 
     @Override
     public void Act() {
-        if (new Random().nextDouble() < 0.1)
+        if (new Random().nextDouble() < 0.01)
             sow();
     }
 
@@ -41,4 +44,8 @@ public abstract class Plant extends Animal {
             world.safePushOrganism(new HeracleumSosnowskyi(10, 0, 0, newPosition, world));
     }
 
+
+    @Override
+    public void handleCollision(Organism otherOrganism) {
+    }
 }

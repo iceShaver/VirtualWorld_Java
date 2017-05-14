@@ -4,11 +4,13 @@ import virtualworld.Position;
 import virtualworld.organisms.Organism;
 
 import javax.swing.*;
+import java.io.Serializable;
+import java.util.Vector;
 
 /**
  * Created by Kamil on 11.05.2017.
  */
-public class HexagonalArea extends Area {
+public class HexagonalArea extends Area implements Serializable {
 
     public HexagonalArea(int width, int height, JPanel worldRepresentationPanel) {
         super(width, height, worldRepresentationPanel);
@@ -53,6 +55,11 @@ public class HexagonalArea extends Area {
 
     @Override
     public Position GetRandomPosition(Position position, int range, NeighbourPlaceSearchMode neighbourPlaceSearchMode) {
+        return null;
+    }
+
+    @Override
+    public Vector<Position> getAllNeighbourPositions(Position position, int range, NeighbourPlaceSearchMode neighbourPlaceSearchMode) {
         return null;
     }
 }

@@ -1,6 +1,7 @@
 package virtualworld.organisms;
 
 import virtualworld.Position;
+import virtualworld.ResistType;
 import virtualworld.World;
 import virtualworld.organisms.animals.Animal;
 
@@ -12,12 +13,13 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 
 /**
  * Created by Kamil on 11.05.2017.
  */
-public abstract class Organism implements Comparable, ActionListener {
+public abstract class Organism implements Comparable, ActionListener, Serializable {
     public Organism(int strength, int age, int initiative, Position position, World world) {
         this.strength = strength;
         this.age = age;
@@ -28,7 +30,11 @@ public abstract class Organism implements Comparable, ActionListener {
     }
 
     public abstract void Act();
-
+    public  ResistType resistAttack(final Organism otherOrganism){
+        if(strength>otherOrganism.strength)return ResistType.kill;
+        return ResistType.surrender;
+    }
+    public abstract void handleCollision(Organism organism);
     @Override
     public int compareTo(Object o) {
         if (initiative > ((Organism) o).initiative)

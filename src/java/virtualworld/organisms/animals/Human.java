@@ -5,12 +5,13 @@ import virtualworld.World;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 
 /**
  * Created by Kamil on 11.05.2017.
  */
-public class Human extends Animal{
+public class Human extends Animal implements Serializable {
     protected static ImageIcon imageIcon;
     public Human(int strength, int age, int initiative, Position position, World world) {
         super(strength, age, initiative, position, world);

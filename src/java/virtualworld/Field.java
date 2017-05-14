@@ -3,11 +3,12 @@ package virtualworld;
 import virtualworld.organisms.Organism;
 
 import javax.swing.*;
+import java.io.Serializable;
 
 /**
  * Created by kamil on 5/13/17.
  */
-public class Field {
+public class Field implements Serializable{
     Organism organism;
     JButton button;
 

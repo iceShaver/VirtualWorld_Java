@@ -3,11 +3,15 @@ package virtualworld;
 import oracle.jrockit.jfr.JFR;
 
 import javax.swing.*;
+import java.io.Serializable;
 
 /**
  * Created by Kamil on 11.05.2017.
  */
-public final class GameInitializer {
+public final class GameInitializer implements Serializable{
+    public GameInitializer() {
+    }
+
     public GameInitializer(int width, int height, AreaType areaType, JPanel worldRepresentationPanel) {
         this.width = width;
         this.height = height;

@@ -3,6 +3,7 @@ package virtualworld;
 import virtualworld.organisms.Organism;
 
 import javax.swing.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -10,7 +11,7 @@ import java.util.Vector;
 /**
  * Created by Kamil on 11.05.2017.
  */
-public class Reporter {
+public class Reporter implements Serializable {
     private JList outputList;
     DefaultListModel messages;
 

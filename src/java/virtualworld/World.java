@@ -14,18 +14,53 @@ import virtualworld.organisms.plants.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * Created by Kamil on 11.05.2017.
  */
-public class World {
+public class World implements Serializable {
     private Area area;
     private Reporter reporter;
-    private VirtualWorld mainWindow;
+    transient private VirtualWorld mainWindow;
     private Human human;
     public LinkedList<Organism> organismsToPush;
     public LinkedList<Organism> organismsToDelete;
+
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public Reporter getReporter() {
+        return reporter;
+    }
+
+    public void setReporter(Reporter reporter) {
+        this.reporter = reporter;
+    }
+
+    public VirtualWorld getMainWindow() {
+        return mainWindow;
+    }
+
+    public void setMainWindow(VirtualWorld mainWindow) {
+        this.mainWindow = mainWindow;
+    }
+
+    public Human getHuman() {
+        return human;
+    }
+
+    public void setHuman(Human human) {
+        this.human = human;
+    }
 
     public World(GameInitializer gameInitializer) {
         if (gameInitializer.areaType == AreaType.SQUARE)
@@ -39,9 +74,7 @@ public class World {
         mainWindow = (VirtualWorld) gameInitializer.mainWindow;
     }
 
-    public void Collide(Organism attacker, Organism attacked) {
 
-    }
 
     private TreeMultiset<Organism> organisms;
 
@@ -53,11 +86,12 @@ public class World {
         return area.getHeight();
     }
 
-    public void safePushOrganism(Organism organism){
+    public void safePushOrganism(Organism organism) {
         area.pushOrganism(organism);
         organismsToPush.add(organism);
     }
-    public void safeDeleteOrganism(Organism organism){
+
+    public void safeDeleteOrganism(Organism organism) {
         area.deleteOrganism(organism.getPosition());
         organismsToDelete.add(organism);
     }
@@ -77,9 +111,9 @@ public class World {
     }
 
     public void RandomizeOrganisms() {
-        //PushOrganism(new Antelope(1,1,1,area.GetEmptyRandomPosition(), this));
         human = new Human(5, 0, 4, area.GetEmptyRandomPosition(), this);
         PushOrganism(human);
+        PushOrganism(new Antelope(1, 1, 1, area.GetEmptyRandomPosition(), this));
         PushOrganism(new CyberSheep(11, 0, 4, area.GetEmptyRandomPosition(), this));
         PushOrganism(new Fox(3, 0, 7, area.GetEmptyRandomPosition(), this));
         PushOrganism(new Sheep(4, 0, 4, area.GetEmptyRandomPosition(), this));
@@ -106,28 +140,33 @@ public class World {
 
     public void playRound() {
 
-            for (Organism organism : organisms) {
-                organism.Act();
+        for (Organism organism : organisms) {
+            organism.Act();
+        }
+        if (organismsToDelete.size() != 0) {
+            for (Organism organism : organismsToDelete) {
+                deleteFromList(organism);
             }
-            if(organismsToDelete.size()!=0){
-                for (Organism organism : organismsToDelete) {
-                    deleteFromList(organism);
-                }
-                organismsToDelete.clear();
+            organismsToDelete.clear();
+        }
+        if (organismsToPush.size() != 0) {
+            for (Organism toPush : organismsToPush) {
+                pushToList(toPush);
             }
-            if(organismsToPush.size()!=0){
-                for (Organism toPush : organismsToPush) {
-                    pushToList(toPush);
-                }
-                organismsToPush.clear();
-            }
+            organismsToPush.clear();
+        }
         mainWindow.updateOrganismsList(organisms.toArray(new Organism[organisms.size()]));
     }
 
 
     private void deleteFromList(Organism organism) {
         //TODO: Check compare methods
-        //organisms.remove(organism);
+        Iterator<Organism> iterator = organisms.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next() == organism)
+                iterator.remove();
+        }
+        mainWindow.updateOrganismsList(organisms.toArray(new Organism[organisms.size()]));
     }
 
 
@@ -146,8 +185,13 @@ public class World {
     public Position GetEmptyRandomPosition(Position position, int range) {
         return area.GetEmptyRandomPosition(position, range);
     }
-    public Position GetRandomNeighbourPosition(Position position, int range, NeighbourPlaceSearchMode neighbourPlaceSearchMode){
+
+    public Position GetRandomNeighbourPosition(Position position, int range, NeighbourPlaceSearchMode neighbourPlaceSearchMode) {
         return area.GetRandomPosition(position, range, neighbourPlaceSearchMode);
+    }
+
+    public Vector<Position> GetAllNeighbourPositions(Position position, int range, NeighbourPlaceSearchMode neighbourPlaceSearchMode) {
+        return area.getAllNeighbourPositions(position, range, neighbourPlaceSearchMode);
     }
 
     public Organism GetOrganism(Position position) {
@@ -161,11 +205,17 @@ public class World {
         area.pushOrganism(organism);
     }
 
-    public void pushToArea(Organism organism){
+    public void pushToArea(Organism organism) {
         area.pushOrganism(organism);
     }
-    public void pushToList(Organism organism){
+
+    public void pushToList(Organism organism) {
         organisms.add(organism);
         mainWindow.updateOrganismsList(organisms.toArray(new Organism[organisms.size()]));
+    }
+
+    public void initializeAfterDeserialization(GameInitializer gameInitializer) {
+        area.setWorldRepresentationPanel(gameInitializer.worldRepresentationPanel);
+        mainWindow = (VirtualWorld) gameInitializer.mainWindow;
     }
 }

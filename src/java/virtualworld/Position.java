@@ -1,9 +1,11 @@
 package virtualworld;
 
+import java.io.Serializable;
+
 /**
  * Created by Kamil on 11.05.2017.
  */
-public class Position implements Cloneable{
+public class Position implements Cloneable, Serializable{
     public Position() {}
 
     public Position(int x, int y) {
