@@ -24,6 +24,7 @@ public abstract class Organism implements Comparable, ActionListener {
         this.initiative = initiative;
         this.position = position;
         this.world = world;
+        world.newMessage("Rodzi się", this);
     }
 
     public abstract void Act();
@@ -31,17 +32,17 @@ public abstract class Organism implements Comparable, ActionListener {
     @Override
     public int compareTo(Object o) {
         if (initiative > ((Organism) o).initiative)
-            return 1;
-        if (initiative < ((Organism) o).initiative)
             return -1;
+        if (initiative < ((Organism) o).initiative)
+            return 1;
         if (initiative == ((Organism) o).initiative) {
             if (age > ((Organism) o).age)
-                return 1;
-            if (age < ((Organism) o).age)
                 return -1;
-            return 0;
+            if (age < ((Organism) o).age)
+                return 1;
+            return -1;
         }
-        return 0;
+        return -1;
 
     }
 
@@ -101,20 +102,20 @@ public abstract class Organism implements Comparable, ActionListener {
         this.initiative = initiative;
     }
 
-    public static Image getImageIcon() {
-        return imageIcon;
-    }
+
 
     protected int strength;
     protected int age;
     private int initiative;
     protected Position position;
     protected World world;
-    protected static Image imageIcon;
+    //protected Image icon;
+    protected ImageIcon icon;
 
-    static protected void readImage(String className) {
+    static protected ImageIcon readImage(String className) {
+        Image result = null;
         try {
-            imageIcon = ImageIO.read(new File("./img/"+className+".png"));
+            result = ImageIO.read(new File("./img/"+className+".png"));
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Nie znaleziono pliku tekstury dla: " + className, "Blad", JOptionPane.ERROR_MESSAGE);
             //Graphics graphics = new BufferedImage(0,40,BufferedImage.TYPE_INT_ARGB).getGraphics();
@@ -122,7 +123,21 @@ public abstract class Organism implements Comparable, ActionListener {
             //graphics.drawImage(imageIcon, 0, 0, null);
             //imageIcon = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
         }
-
+        return new ImageIcon(result.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        //return null;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName()+"{" +
+                "strength=" + strength +
+                ", age=" + age +
+                ", initiative=" + initiative +
+                ", position=" + position +
+                ", world=" + world +
+                '}';
+    }
+    public ImageIcon getIcon() {
+        return icon;
+    }
 }

@@ -33,12 +33,18 @@ public class SquareArea extends Area {
         if(topLeftPosition.getY()<0)topLeftPosition.setY(0);
         if(bottomRightPosition.getX()>=height) bottomRightPosition.setX(width-1);
         if(bottomRightPosition.getY()>=height) bottomRightPosition.setY(height-1);
-        int availablePositionsWidth = bottomRightPosition.getX()-topLeftPosition.getX();
-        int availablePositionsHeight = bottomRightPosition.getY()-topLeftPosition.getY();
+        int availablePositionsWidth = bottomRightPosition.getX()-topLeftPosition.getX()+1;
+        int availablePositionsHeight = bottomRightPosition.getY()-topLeftPosition.getY()+1;
         int availablePositionsNumber = availablePositionsHeight*availablePositionsWidth-1;
         if(availablePositionsNumber==0) return null;
         int random = new Random().nextInt(availablePositionsNumber);
-        return new Position(random%availablePositionsWidth, random/availablePositionsWidth);
+        int randomX=0, randomY=0;
+        do {
+            randomX = new Random().nextInt(availablePositionsWidth);
+            randomY = new Random().nextInt(availablePositionsHeight);
+        }while (randomX ==position.getX() && randomY==position.getY());
+
+        return new Position(topLeftPosition.getX()+randomX, topLeftPosition.getY()+randomY);
     }
 
     @Override
@@ -98,11 +104,17 @@ public class SquareArea extends Area {
     @Override
     public void pushOrganism(Organism organism) {
         fields[organism.getPosition().getY()][organism.getPosition().getX()].setOrganism(organism);
-        if(organism.getImageIcon()==null)
+        if(organism.getIcon()==null)
             fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().setBackground(Color.black);
         else
-            fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().setIcon(new ImageIcon(organism.getImageIcon().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+            fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().setIcon(organism.getIcon());
         fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().setOpaque(true);
         fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().addActionListener(organism);
+        fields[organism.getPosition().getY()][organism.getPosition().getX()].getButton().repaint();
+    }
+
+    @Override
+    public void deleteOrganism(Position position) {
+        fields[position.getY()][position.getX()].clear();
     }
 }

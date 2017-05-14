@@ -31,4 +31,12 @@ public class Field {
     public void setOrganism(Organism organism) {
         this.organism = organism;
     }
+
+    public void clear() {
+        button.removeActionListener(organism);
+        button.setIcon(null);
+        button.setOpaque(false);
+        button.repaint();
+        organism = null;
+    }
 }

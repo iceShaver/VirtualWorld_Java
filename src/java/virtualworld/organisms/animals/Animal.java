@@ -20,7 +20,13 @@ public abstract class Animal extends Organism {
 
     @Override
     public void Act() {
+        Position newPosition = world.GetRandomPosition(position, 1);
+        if (newPosition == null) return;
+        if (world.GetOrganism(newPosition) != null) {
+            world.Collide(this, world.GetOrganism(newPosition));
+            return;
 
+        }
+        world.moveOrganism(this, newPosition);
     }
-
 }

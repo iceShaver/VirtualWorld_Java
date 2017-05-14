@@ -11,11 +11,15 @@ import java.lang.invoke.MethodHandles;
  * Created by Kamil on 11.05.2017.
  */
 public class Dandelion extends Plant{
+    protected static ImageIcon imageIcon;
     public Dandelion(int strength, int age, int initiative, Position position, World world) {
         super(strength, age, initiative, position, world);
+        icon=imageIcon;
+
     }
     static {
-        readImage(MethodHandles.lookup().lookupClass().getSimpleName());
+        imageIcon = readImage(MethodHandles.lookup().lookupClass().getSimpleName());
     }
+
 }
 

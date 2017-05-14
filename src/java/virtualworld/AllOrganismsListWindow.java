@@ -1,3 +1,5 @@
+package virtualworld;
+
 import virtualworld.organisms.Organism;
 
 import javax.swing.*;
@@ -8,18 +10,19 @@ import java.awt.*;
  */
 public class AllOrganismsListWindow extends JFrame {
     private JPanel panel1;
+    private JList list1;
     private Organism[] organisms;
     public AllOrganismsListWindow(Organism[]organisms){
         this.organisms = organisms;
-        panel1.add(new JList(organisms));
+        list1.setListData(organisms);
         setContentPane(panel1);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setVisible(true);
     }
 
 
-
-
-
+    public void refresh(Organism[] organisms) {
+        list1.setListData(organisms);
+    }
 }

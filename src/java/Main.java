@@ -1,3 +1,5 @@
+import virtualworld.VirtualWorld;
+
 import javax.swing.*;
 
 /**

@@ -1,3 +1,7 @@
+package virtualworld;
+
+import virtualworld.organisms.Organism;
+
 import javax.swing.*;
 
 /**
@@ -7,11 +11,17 @@ public class LogWindow extends JFrame {
     private JPanel LogPanel;
     private JList list1;
 
+    public JList getList1() {
+        return list1;
+    }
+
     public LogWindow() {
         super("Log Window");
         setContentPane(LogPanel);
-        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         pack();
         setVisible(true);
     }
+
 }

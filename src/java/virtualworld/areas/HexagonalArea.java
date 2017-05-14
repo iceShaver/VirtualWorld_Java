@@ -48,4 +48,9 @@ public class HexagonalArea extends Area {
     public void pushOrganism(Organism organism) {
 
     }
+
+    @Override
+    public void deleteOrganism(Position position) {
+
+    }
 }

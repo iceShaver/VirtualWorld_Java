@@ -1,3 +1,5 @@
+package virtualworld;
+
 import virtualworld.AreaType;
 import virtualworld.GameInitializer;
 

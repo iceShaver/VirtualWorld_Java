@@ -50,4 +50,5 @@ public abstract class Area {
     public abstract void pushOrganism(Organism organism);
 
 
+    public abstract void deleteOrganism(Position position);
 }

@@ -11,6 +11,7 @@ import java.awt.*;
  * Created by Kamil on 11.05.2017.
  */
 public abstract class Plant extends Animal{
+    protected static Image imageIcon;
     public Plant(int strength, int age, int initiative, Position position, World world) {
         super(strength, age, initiative, position, world);
     }
