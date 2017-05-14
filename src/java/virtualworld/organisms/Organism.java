@@ -140,7 +140,6 @@ public abstract class Organism implements Comparable, ActionListener, Serializab
                 ", age=" + age +
                 ", initiative=" + initiative +
                 ", position=" + position +
-                ", world=" + world +
                 '}';
     }
     public ImageIcon getIcon() {

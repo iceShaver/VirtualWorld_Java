@@ -27,8 +27,14 @@ public class World implements Serializable {
     private Reporter reporter;
     transient private VirtualWorld mainWindow;
     private Human human;
+    private int roundNumber;
     public LinkedList<Organism> organismsToPush;
     public LinkedList<Organism> organismsToDelete;
+
+    public int getRoundNumber() {
+        return roundNumber;
+    }
+
 
     public Area getArea() {
         return area;
@@ -72,6 +78,7 @@ public class World implements Serializable {
         organismsToPush = new LinkedList<>();
         reporter = gameInitializer.reporter;
         mainWindow = (VirtualWorld) gameInitializer.mainWindow;
+        roundNumber = 0;
     }
 
 
@@ -156,6 +163,7 @@ public class World implements Serializable {
             organismsToPush.clear();
         }
         mainWindow.updateOrganismsList(organisms.toArray(new Organism[organisms.size()]));
+        roundNumber++;
     }
 
 
@@ -217,5 +225,16 @@ public class World implements Serializable {
     public void initializeAfterDeserialization(GameInitializer gameInitializer) {
         area.setWorldRepresentationPanel(gameInitializer.worldRepresentationPanel);
         mainWindow = (VirtualWorld) gameInitializer.mainWindow;
+    }
+
+    public boolean checkIfPlaceIsValidAndEmpty(int x, int y) {
+        if(x<0||y<0||x>=area.getWidth()-1||y>=area.getHeight()-1)return false;
+        if(GetOrganism(new Position(x, y))!=null)return false;
+        return true;
+    }
+
+    public boolean checkIfPlaceIsValid(int x, int y) {
+        if(x<0||y<0||x>=area.getWidth()-1||y>=area.getHeight()-1)return false;
+        return true;
     }
 }

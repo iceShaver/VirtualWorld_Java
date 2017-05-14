@@ -6,8 +6,7 @@ import virtualworld.organisms.animals.Antelope;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 
 /**
@@ -34,6 +33,18 @@ public class VirtualWorld extends JFrame {
 
     public VirtualWorld() {
         super("Wirtualny świat - Kamil Królikowski 165253");
+
+        KeyboardFocusManager manager =
+                KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                if(world!=null)
+                    if(world.getHuman()!=null)world.getHuman().handleInput(e);
+                System.out.println("Asdsad");
+                return false;
+            }
+        });
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -64,8 +75,7 @@ public class VirtualWorld extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (world == null)
                     JOptionPane.showMessageDialog(null, "Start the game first", "Error", JOptionPane.ERROR_MESSAGE);
-                else
-                {
+                else {
                     logFrame = new LogWindow();
                     reporter.setOutputList(logFrame.getList1());
                 }
@@ -78,7 +88,7 @@ public class VirtualWorld extends JFrame {
                 GameInitializer gameInitializer = newGameDialog.GetResult();
                 if (gameInitializer == null) return;
                 gameInitializer.worldRepresentationPanel = worldRepresentationPanel;
-                gameInitializer.reporter=reporter=new Reporter();
+                gameInitializer.reporter = reporter = new Reporter();
                 gameInitializer.mainWindow = VirtualWorld.this;
                 StartNewGame(gameInitializer);
             }
@@ -97,7 +107,7 @@ public class VirtualWorld extends JFrame {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                world.PushOrganism(new Antelope(0,0,0,new Position(5,5), world));
+                world.PushOrganism(new Antelope(0, 0, 0, new Position(5, 5), world));
             }
         });
         saveGameButton.addActionListener(new ActionListener() {
@@ -114,7 +124,7 @@ public class VirtualWorld extends JFrame {
                         "Binary files", "bin");
                 chooser.setFileFilter(filter);
                 int returnVal = chooser.showOpenDialog(getParent());
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     System.out.println("You chose to open this file: " +
                             chooser.getSelectedFile().getName());
                     openGame(chooser.getSelectedFile().getAbsolutePath());
@@ -122,7 +132,33 @@ public class VirtualWorld extends JFrame {
 
             }
         });
+//        virtualWorldPanel.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyTyped(KeyEvent e) {
+//                System.out.println("asd");
+//                super.keyTyped(e);
+//            }
+//
+//            @Override
+//            public void keyPressed(KeyEvent e) {
+//                System.out.println("asd");
+//
+//                super.keyPressed(e);
+//            }
+//
+//            @Override
+//            public void keyReleased(KeyEvent e) {
+//                System.out.println("asd");
+//
+//                if(world!=null){
+//                    world.getHuman().handleInput(e);
+//                }
+//            }
+//        });
+//        virtualWorldPanel.setFocusable(true);
+
     }
+
 
     private void openGame(String absolutePath) {
         FileInputStream fis = null;
@@ -155,6 +191,17 @@ public class VirtualWorld extends JFrame {
         gameInitializer.worldRepresentationPanel = worldRepresentationPanel;
         world.initializeAfterDeserialization(gameInitializer);
         world.DrawInterface(worldRepresentationPanel);
+        nextRoundButton = new JButton();
+        nextRoundButton.setText("Next round");
+        nextRoundButton.setBackground(Color.red);
+        nextRoundButton.setOpaque(true);
+        nextRoundButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                world.playRound();
+            }
+        });
+        menuToolbar.add(nextRoundButton, 0);
     }
 
     private void saveGame() {
